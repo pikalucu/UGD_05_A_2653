@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AuthFromWrapper from '@/components/AuthFormWrapper';
 import SocialAuth from '@/components/SocialAuth';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 interface LoginFormData {
   email: string;
@@ -23,7 +24,7 @@ interface ErrorObject {
 const MAX_ATTEMPTS = 3;
 
 const generateCaptcha = () => {
-  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
 };
 
@@ -58,7 +59,7 @@ const LoginPage = () => {
     if (!formData.email.trim()) {
       newErrors.email = 'Email tidak boleh kosong';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Format email tidak valid';
+      newErrors.email = 'Email harus sesuai dengan format npm kalian (cth. 1905@gmail.com)';
     }
 
     if (!formData.password.trim()) {
@@ -99,7 +100,9 @@ const LoginPage = () => {
 
   return (
     <AuthFromWrapper title="Login">
-      <p className="text-center text-sm text-gray-500 mb-4">Sisa kesempatan: {attempts}</p>
+      <p className="text-center text-sm font-semibold text-gray-600 mb-4">
+        Sisa Kesempatan: {attempts}
+      </p>
       <form onSubmit={handleSubmit} className="space-y-5 w-full">
 
         <div className="space-y-2">
@@ -112,7 +115,7 @@ const LoginPage = () => {
             className={`w-full px-4 py-2.5 rounded-lg border ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
             placeholder="Masukan email"
           />
-          {errors.email && <p className="text-red-600 text-sm italic mt-1">{errors.email}</p>}
+          {errors.email && <p className="text-red-500 text-sm italic mt-1">{errors.email}</p>}
         </div>
 
         <div className="space-y-2">
@@ -130,12 +133,12 @@ const LoginPage = () => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
             >
-              {showPassword ? '🙈' : '👁️'}
+              {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
             </button>
           </div>
-          {errors.password && <p className="text-red-600 text-sm italic mt-1">{errors.password}</p>}
+          {errors.password && <p className="text-red-500 text-sm italic mt-1">{errors.password}</p>}
         </div>
 
         <div className="flex items-center justify-between">
@@ -147,10 +150,10 @@ const LoginPage = () => {
               onChange={(e) => setFormData(prev => ({ ...prev, remberMe: e.target.checked }))}
               className="mr-2 h-4 w-4 rounded border-gray-300"
             />
-            Ingat saya
+            Ingat Saya
           </label>
           <Link href="/auth/forgot-password" className="text-blue-600 hover:text-blue-800 text-sm font-semibold">
-            Forgot password?
+            Forgot Password?
           </Link>
         </div>
 
@@ -160,7 +163,11 @@ const LoginPage = () => {
             <span className="font-mono text-lg font-bold text-gray-800 bg-gray-100 px-3 py-1.5 rounded">
               {captcha}
             </span>
-            <button type="button" onClick={() => setCaptcha(generateCaptcha())} className="text-blue-500 hover:text-blue-700 text-lg">
+            <button
+              type="button"
+              onClick={() => setCaptcha(generateCaptcha())}
+              className="text-blue-500 hover:text-blue-700"
+            >
               🔄
             </button>
           </div>
@@ -172,7 +179,7 @@ const LoginPage = () => {
             className={`w-full px-4 py-2.5 rounded-lg border ${errors.captcha ? 'border-red-500' : 'border-gray-300'}`}
             placeholder="Masukan captcha"
           />
-          {errors.captcha && <p className="text-red-600 text-sm italic mt-1">{errors.captcha}</p>}
+          {errors.captcha && <p className="text-red-500 text-sm italic mt-1">{errors.captcha}</p>}
         </div>
 
         <button

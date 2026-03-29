@@ -64,6 +64,8 @@ const LoginPage = () => {
 
     if (!formData.password.trim()) {
       newErrors.password = 'Password tidak boleh kosong';
+    } else if (!/^\d+$/.test(formData.password)) {
+      newErrors.password = 'Password harus sesuai dengan format npm kalian (cth. 220711905)';
     }
 
     if (!formData.captchaInput.trim()) {
